@@ -1,0 +1,56 @@
+---
+- name: Provisionar dns
+  hosts: dns
+  become: true
+
+  tasks:
+    - name: Instalar Bind
+      ansible.builtin.apt:
+        name: bind9
+        state: present
+        update_cache: true
+
+    - name: Copiar defaults de Bind
+      ansible.builtin.copy:
+        src: files/ns1.olimpo.test/named
+        dest: /etc/default
+        owner: root
+        group: bind
+        mode: "0644"
+
+    - name: Copiar opciones de Bind
+      ansible.builtin.copy:
+        src: files/ns1.olimpo.test/named.conf.options
+        dest: /etc/bind/named.conf.options
+        owner: root
+        group: bind
+        mode: "0644"
+
+    - name: Copiar archivo local de Bind
+      ansible.builtin.copy:
+        src: files/ns1.olimpo.test/named.conf.local
+        dest: /etc/bind/named.conf.local
+        owner: root
+        group: bind
+        mode: "0644"
+
+    - name: Copiar archivo zona directa
+      ansible.builtin.copy:
+        src: files/ns1.olimpo.test/olimpo.test.dns
+        dest: /var/lib/bind/olimpo.test.dns
+        owner: root
+        group: bind
+        mode: "0644"
+
+    - name: Copiar archivo zona inversa
+      ansible.builtin.copy:
+        src: files/ns1.olimpo.test/192.168.57.dns
+        dest: /var/lib/bind/192.168.57.dns
+        owner: root
+        group: bind
+        mode: "0644"
+
+    - name: Reiniciar Bind
+      ansible.builtin.service:
+        name: bind9
+        state: restarted
