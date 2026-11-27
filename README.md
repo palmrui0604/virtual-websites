@@ -1,4 +1,4 @@
-# Laboratorio web 1: Sitios virtuales
+# Laboratorio web 2: Seguridad
 
 ## Utilización
 
